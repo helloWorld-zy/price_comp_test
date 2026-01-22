@@ -89,14 +89,15 @@ type Container struct {
 	AuditLogRepo      *repo.AuditLogRepository
 
 	// Services
-	JWTService         *auth.JWTService
-	PasswordService    *auth.PasswordService
-	AuthService        *auth.AuthService
-	AuditService       *obs.AuditService
-	CatalogService     *service.CatalogService
-	QuoteService       *service.QuoteService
-	ImportJobService   *service.ImportJobService
-	FileStorageService *service.FileStorageService
+	JWTService            *auth.JWTService
+	PasswordService       *auth.PasswordService
+	AuthService           *auth.AuthService
+	AuditService          *obs.AuditService
+	CatalogService        *service.CatalogService
+	QuoteService          *service.QuoteService
+	ImportJobService      *service.ImportJobService
+	FileStorageService    *service.FileStorageService
+	TemplateImportService *service.TemplateImportService
 
 	// HTTP Handlers
 	Handlers *httpTransport.Handlers
@@ -184,12 +185,24 @@ func NewContainer(config *Config) (*Container, error) {
 		c.AuditService,
 	)
 
+	// Initialize template import service
+	c.TemplateImportService = service.NewTemplateImportService(
+		c.CruiseLineRepo,
+		c.ShipRepo,
+		c.CabinCategoryRepo,
+		c.CabinTypeRepo,
+		c.SailingRepo,
+		c.AuditService,
+		*c.Logger,
+	)
+
 	// Initialize HTTP handlers
 	c.Handlers = &httpTransport.Handlers{
-		Auth:    httpTransport.NewAuthHandler(c.AuthService),
-		Catalog: httpTransport.NewCatalogHandler(c.CatalogService),
-		Quote:   httpTransport.NewQuoteHandler(c.QuoteService),
-		Import:  httpTransport.NewImportHandler(c.ImportJobService),
+		Auth:     httpTransport.NewAuthHandler(c.AuthService),
+		Catalog:  httpTransport.NewCatalogHandler(c.CatalogService),
+		Quote:    httpTransport.NewQuoteHandler(c.QuoteService),
+		Import:   httpTransport.NewImportHandler(c.ImportJobService),
+		Template: httpTransport.NewTemplateHandler(c.TemplateImportService),
 	}
 
 	c.Logger.Info("application container initialized")

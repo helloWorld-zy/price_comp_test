@@ -137,13 +137,20 @@ func RegisterRoutes(r *gin.Engine, handlers *Handlers) {
 		admin.POST("/suppliers", handlers.Catalog.CreateSupplier)
 		admin.PUT("/suppliers/:id", handlers.Catalog.UpdateSupplier)
 		admin.DELETE("/suppliers/:id", handlers.Catalog.DeleteSupplier)
+
+		// Template import
+		admin.GET("/template/sailing/download", handlers.Template.DownloadSailingTemplate)
+		admin.GET("/template/cabin-type/download", handlers.Template.DownloadCabinTypeTemplate)
+		admin.POST("/template/sailing/import", handlers.Template.UploadSailingTemplate)
+		admin.POST("/template/cabin-type/import", handlers.Template.UploadCabinTypeTemplate)
 	}
 }
 
 // Handlers aggregates all HTTP handlers
 type Handlers struct {
-	Auth    *AuthHandler
-	Catalog *CatalogHandler
-	Quote   *QuoteHandler
-	Import  *ImportHandler
+	Auth     *AuthHandler
+	Catalog  *CatalogHandler
+	Quote    *QuoteHandler
+	Import   *ImportHandler
+	Template *TemplateHandler
 }

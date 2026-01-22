@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"cruise-price-compare/internal/domain"
+	"cruise-price-compare/internal/obs"
 	"cruise-price-compare/internal/repo"
 
 	"github.com/shopspring/decimal"
@@ -18,7 +19,7 @@ type QuoteService struct {
 	sailingRepo  *repo.SailingRepository
 	cabinRepo    *repo.CabinTypeRepository
 	supplierRepo *repo.SupplierRepository
-	auditService *AuditService
+	auditService *obs.AuditService
 }
 
 // NewQuoteService creates a new quote service
@@ -27,7 +28,7 @@ func NewQuoteService(
 	sailingRepo *repo.SailingRepository,
 	cabinRepo *repo.CabinTypeRepository,
 	supplierRepo *repo.SupplierRepository,
-	auditService *AuditService,
+	auditService *obs.AuditService,
 ) *QuoteService {
 	return &QuoteService{
 		quoteRepo:    quoteRepo,
@@ -130,7 +131,8 @@ func (s *QuoteService) CreateQuote(ctx context.Context, input CreateQuoteInput) 
 
 	// Audit log
 	if s.auditService != nil {
-		s.auditService.LogCreate(ctx, input.UserID, input.SupplierID, "PriceQuote", quote.ID, quote)
+		supplierIDPtr := &input.SupplierID
+		s.auditService.LogCreate(ctx, input.UserID, supplierIDPtr, "PriceQuote", quote.ID, quote)
 	}
 
 	return quote, nil
@@ -216,7 +218,8 @@ func (s *QuoteService) VoidQuote(ctx context.Context, id uint64, reason string, 
 
 	// Audit log
 	if s.auditService != nil {
-		s.auditService.LogUpdate(ctx, userID, quote.SupplierID, "PriceQuote", quote.ID, map[string]interface{}{"reason": reason}, quote)
+		supplierIDPtr := &quote.SupplierID
+		s.auditService.LogUpdate(ctx, userID, supplierIDPtr, "PriceQuote", quote.ID, map[string]interface{}{"reason": reason}, quote)
 	}
 
 	return quote, nil

@@ -226,13 +226,13 @@
 
 **Independent Test**: 下载模板、填充数据、上传后验证航次和房型数据已入库
 
-- [ ] T119 [US3] Create Excel template generator in /internal/parsers/excel_template.go
-- [ ] T120 [US3] Create Excel parser for sailings in /internal/parsers/excel_sailing_parser.go
-- [ ] T121 [P] [US3] Create Excel parser for cabin types in /internal/parsers/excel_cabin_parser.go
-- [ ] T122 [US3] Create TemplateImportService in /internal/service/template_import_service.go
-- [ ] T123 [US3] Implement batch validation with row-level errors
-- [ ] T124 [US3] Create TemplateHandler in /internal/transport/http/template_handler.go
-- [ ] T125 [US3] Register template routes in /internal/transport/http/routes.go
+- [X] T119 [US3] Create Excel template generator in /internal/parsers/excel_template.go
+- [X] T120 [US3] Create Excel parser for sailings in /internal/parsers/excel_sailing_parser.go
+- [X] T121 [P] [US3] Create Excel parser for cabin types in /internal/parsers/excel_cabin_parser.go
+- [X] T122 [US3] Create TemplateImportService in /internal/service/template_import_service.go
+- [X] T123 [US3] Implement batch validation with row-level errors
+- [X] T124 [US3] Create TemplateHandler in /internal/transport/http/template_handler.go
+- [X] T125 [US3] Register template routes in /internal/transport/http/routes.go
 - [ ] T126 [P] [US3] Create template store (Pinia) in /web/src/stores/template.ts
 - [ ] T127 [US3] Create TemplateDownloader component in /web/src/components/TemplateDownloader.vue
 - [ ] T128 [US3] Create TemplateUploader component in /web/src/components/TemplateUploader.vue
