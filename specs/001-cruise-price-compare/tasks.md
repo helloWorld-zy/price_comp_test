@@ -44,7 +44,7 @@
 
 ---
 
-## Phase 2: Foundation (基础设施 + US6 管理员基础数据维护)
+## Phase 2: Foundation (基础设施 + US6 管理员基础数据维护) ✅ COMPLETE
 
 **Purpose**: Core infrastructure that MUST be complete before user story implementation
 
@@ -52,75 +52,75 @@
 
 ### 2.1 Database & Migrations
 
-- [ ] T012 Create database migration for users table in /migrations/001_users.sql
-- [ ] T013 [P] Create migration for cruise_line table in /migrations/002_cruise_line.sql
-- [ ] T014 [P] Create migration for ship table in /migrations/003_ship.sql
-- [ ] T015 [P] Create migration for cabin_category table in /migrations/004_cabin_category.sql
-- [ ] T016 [P] Create migration for cabin_type table in /migrations/005_cabin_type.sql
-- [ ] T017 [P] Create migration for sailing table in /migrations/006_sailing.sql
-- [ ] T018 [P] Create migration for supplier table in /migrations/007_supplier.sql
-- [ ] T019 Create migration for price_quote table in /migrations/008_price_quote.sql
-- [ ] T020 [P] Create migration for import_job table in /migrations/009_import_job.sql
-- [ ] T021 [P] Create migration for parse_job table in /migrations/010_parse_job.sql
-- [ ] T022 [P] Create migration for audit_log table in /migrations/011_audit_log.sql
-- [ ] T023 Create migration runner in /cmd/migrate/main.go
-- [ ] T024 Seed default cabin categories (内舱/海景/阳台/套房) in /migrations/seed_categories.sql
+- [X] T012 Create database migration for users table in /migrations/001_users.sql
+- [X] T013 [P] Create migration for cruise_line table in /migrations/002_cruise_line.sql
+- [X] T014 [P] Create migration for ship table in /migrations/003_ship.sql
+- [X] T015 [P] Create migration for cabin_category table in /migrations/004_cabin_category.sql
+- [X] T016 [P] Create migration for cabin_type table in /migrations/005_cabin_type.sql
+- [X] T017 [P] Create migration for sailing table in /migrations/006_sailing.sql
+- [X] T018 [P] Create migration for supplier table in /migrations/007_supplier.sql
+- [X] T019 Create migration for price_quote table in /migrations/008_price_quote.sql
+- [X] T020 [P] Create migration for import_job table in /migrations/009_import_job.sql
+- [X] T021 [P] Create migration for parse_job table in /migrations/010_parse_job.sql
+- [X] T022 [P] Create migration for audit_log table in /migrations/011_audit_log.sql
+- [X] T023 Create migration runner in /cmd/migrate/main.go
+- [X] T024 Seed default cabin categories (内舱/海景/阳台/套房) in /migrations/seed_categories.sql
 
 ### 2.2 Domain Models
 
-- [ ] T025 [P] Create User domain model in /internal/domain/user.go
-- [ ] T026 [P] Create CruiseLine domain model in /internal/domain/cruise_line.go
-- [ ] T027 [P] Create Ship domain model in /internal/domain/ship.go
-- [ ] T028 [P] Create CabinCategory domain model in /internal/domain/cabin_category.go
-- [ ] T029 [P] Create CabinType domain model in /internal/domain/cabin_type.go
-- [ ] T030 [P] Create Sailing domain model in /internal/domain/sailing.go
-- [ ] T031 [P] Create Supplier domain model in /internal/domain/supplier.go
-- [ ] T032 [P] Create PriceQuote domain model in /internal/domain/price_quote.go
-- [ ] T033 [P] Create ImportJob domain model in /internal/domain/import_job.go
-- [ ] T034 [P] Create AuditLog domain model in /internal/domain/audit_log.go
-- [ ] T035 Create domain validation rules in /internal/domain/validation.go
+- [X] T025 [P] Create User domain model in /internal/domain/user.go
+- [X] T026 [P] Create CruiseLine domain model in /internal/domain/cruise_line.go
+- [X] T027 [P] Create Ship domain model in /internal/domain/ship.go
+- [X] T028 [P] Create CabinCategory domain model in /internal/domain/cabin_category.go
+- [X] T029 [P] Create CabinType domain model in /internal/domain/cabin_type.go
+- [X] T030 [P] Create Sailing domain model in /internal/domain/sailing.go
+- [X] T031 [P] Create Supplier domain model in /internal/domain/supplier.go
+- [X] T032 [P] Create PriceQuote domain model in /internal/domain/price_quote.go
+- [X] T033 [P] Create ImportJob domain model in /internal/domain/import_job.go
+- [X] T034 [P] Create AuditLog domain model in /internal/domain/audit_log.go
+- [X] T035 Create domain validation rules in /internal/domain/validation.go
 
 ### 2.3 Repository Layer
 
-- [ ] T036 Create database connection pool in /internal/repo/db.go
-- [ ] T037 [P] Create UserRepository in /internal/repo/user_repo.go
-- [ ] T038 [P] Create CruiseLineRepository in /internal/repo/cruise_line_repo.go
-- [ ] T039 [P] Create ShipRepository in /internal/repo/ship_repo.go
-- [ ] T040 [P] Create CabinCategoryRepository in /internal/repo/cabin_category_repo.go
-- [ ] T041 [P] Create CabinTypeRepository in /internal/repo/cabin_type_repo.go
-- [ ] T042 [P] Create SailingRepository in /internal/repo/sailing_repo.go
-- [ ] T043 [P] Create SupplierRepository in /internal/repo/supplier_repo.go
-- [ ] T044 [P] Create PriceQuoteRepository in /internal/repo/price_quote_repo.go
-- [ ] T045 [P] Create ImportJobRepository in /internal/repo/import_job_repo.go
-- [ ] T046 [P] Create AuditLogRepository in /internal/repo/audit_log_repo.go
+- [X] T036 Create database connection pool in /internal/repo/db.go
+- [X] T037 [P] Create UserRepository in /internal/repo/user_repo.go
+- [X] T038 [P] Create CruiseLineRepository in /internal/repo/cruise_line_repo.go
+- [X] T039 [P] Create ShipRepository in /internal/repo/ship_repo.go
+- [X] T040 [P] Create CabinCategoryRepository in /internal/repo/cabin_category_repo.go
+- [X] T041 [P] Create CabinTypeRepository in /internal/repo/cabin_type_repo.go
+- [X] T042 [P] Create SailingRepository in /internal/repo/sailing_repo.go
+- [X] T043 [P] Create SupplierRepository in /internal/repo/supplier_repo.go
+- [X] T044 [P] Create PriceQuoteRepository in /internal/repo/price_quote_repo.go
+- [X] T045 [P] Create ImportJobRepository in /internal/repo/import_job_repo.go
+- [X] T046 [P] Create AuditLogRepository in /internal/repo/audit_log_repo.go
 
 ### 2.4 Authentication & Authorization
 
-- [ ] T047 Create JWT token service in /internal/auth/jwt.go
-- [ ] T048 Create password hashing utility in /internal/auth/password.go
-- [ ] T049 Create AuthService with login/refresh in /internal/auth/auth_service.go
-- [ ] T050 Create RBAC middleware in /internal/auth/rbac.go
-- [ ] T051 Create UserContext injection middleware in /internal/auth/context.go
+- [X] T047 Create JWT token service in /internal/auth/jwt.go
+- [X] T048 Create password hashing utility in /internal/auth/password.go
+- [X] T049 Create AuthService with login/refresh in /internal/auth/auth_service.go
+- [X] T050 Create RBAC middleware in /internal/auth/rbac.go
+- [X] T051 Create UserContext injection middleware in /internal/auth/context.go
 
 ### 2.5 Observability Infrastructure
 
-- [ ] T052 Create structured logger in /internal/obs/logger.go
-- [ ] T053 [P] Create trace ID middleware in /internal/obs/trace.go
-- [ ] T054 [P] Create audit service in /internal/obs/audit.go
-- [ ] T055 [P] Create metrics collector in /internal/obs/metrics.go
+- [X] T052 Create structured logger in /internal/obs/logger.go
+- [X] T053 [P] Create trace ID middleware in /internal/obs/trace.go
+- [X] T054 [P] Create audit service in /internal/obs/audit.go
+- [X] T055 [P] Create metrics collector in /internal/obs/metrics.go
 
 ### 2.6 HTTP Transport Setup
 
-- [ ] T056 Create Gin router setup in /internal/transport/http/router.go
-- [ ] T057 Create Protobuf codec middleware in /internal/transport/http/proto_codec.go
-- [ ] T058 Create error handler middleware in /internal/transport/http/error_handler.go
-- [ ] T059 Create pagination helper in /internal/transport/http/pagination.go
+- [X] T056 Create Gin router setup in /internal/transport/http/router.go
+- [X] T057 Create Protobuf codec middleware in /internal/transport/http/proto_codec.go
+- [X] T058 Create error handler middleware in /internal/transport/http/error_handler.go
+- [X] T059 Create pagination helper in /internal/transport/http/pagination.go
 
 ### 2.7 Application Bootstrap
 
-- [ ] T060 Create dependency injection container in /internal/app/container.go
-- [ ] T061 Create server startup in /cmd/server/main.go
-- [ ] T062 Create graceful shutdown handler in /internal/app/shutdown.go
+- [X] T060 Create dependency injection container in /internal/app/container.go
+- [X] T061 Create server startup in /cmd/server/main.go
+- [X] T062 Create graceful shutdown handler in /internal/app/shutdown.go
 
 ### 2.8 US6: 管理员基础数据维护 (Admin CRUD)
 
@@ -128,30 +128,30 @@
 
 **Independent Test**: 创建一个新邮轮公司和邮轮，验证列表中可见新增数据
 
-- [ ] T063 [US6] Create CatalogService interface in /internal/service/catalog_service.go
-- [ ] T064 [P] [US6] Implement CruiseLineService in /internal/service/cruise_line_service.go
-- [ ] T065 [P] [US6] Implement ShipService in /internal/service/ship_service.go
-- [ ] T066 [P] [US6] Implement CabinCategoryService in /internal/service/cabin_category_service.go
-- [ ] T067 [P] [US6] Implement CabinTypeService in /internal/service/cabin_type_service.go
-- [ ] T068 [P] [US6] Implement SailingService in /internal/service/sailing_service.go
-- [ ] T069 [P] [US6] Implement SupplierService in /internal/service/supplier_service.go
-- [ ] T070 [US6] Create CatalogHandler for all catalog endpoints in /internal/transport/http/catalog_handler.go
-- [ ] T071 [US6] Create AuthHandler for login/logout in /internal/transport/http/auth_handler.go
-- [ ] T072 [US6] Register catalog routes in /internal/transport/http/routes.go
+- [X] T063 [US6] Create CatalogService interface in /internal/service/catalog_service.go
+- [X] T064 [P] [US6] Implement CruiseLineService in /internal/service/cruise_line_service.go
+- [X] T065 [P] [US6] Implement ShipService in /internal/service/ship_service.go
+- [X] T066 [P] [US6] Implement CabinCategoryService in /internal/service/cabin_category_service.go
+- [X] T067 [P] [US6] Implement CabinTypeService in /internal/service/cabin_type_service.go
+- [X] T068 [P] [US6] Implement SailingService in /internal/service/sailing_service.go
+- [X] T069 [P] [US6] Implement SupplierService in /internal/service/supplier_service.go
+- [X] T070 [US6] Create CatalogHandler for all catalog endpoints in /internal/transport/http/catalog_handler.go
+- [X] T071 [US6] Create AuthHandler for login/logout in /internal/transport/http/auth_handler.go
+- [X] T072 [US6] Register catalog routes in /internal/transport/http/routes.go
 
 ### 2.9 Frontend Foundation
 
-- [ ] T073 [P] Create ApiClient with Protobuf support in /web/src/api/client.ts
-- [ ] T074 [P] Create auth store (Pinia) in /web/src/stores/auth.ts
-- [ ] T075 [P] Create router configuration in /web/src/router/index.ts
-- [ ] T076 [P] Create layout components in /web/src/components/Layout/
-- [ ] T077 Create login page in /web/src/pages/Login.vue
-- [ ] T078 [P] [US6] Create CruiseLine management page in /web/src/pages/admin/CruiseLines.vue
-- [ ] T079 [P] [US6] Create Ship management page in /web/src/pages/admin/Ships.vue
-- [ ] T080 [P] [US6] Create Sailing management page in /web/src/pages/admin/Sailings.vue
-- [ ] T081 [P] [US6] Create CabinType management page in /web/src/pages/admin/CabinTypes.vue
-- [ ] T082 [P] [US6] Create Supplier management page in /web/src/pages/admin/Suppliers.vue
-- [ ] T083 [US6] Create admin dashboard page in /web/src/pages/admin/Dashboard.vue
+- [X] T073 [P] Create ApiClient with Protobuf support in /web/src/api/client.ts
+- [X] T074 [P] Create auth store (Pinia) in /web/src/stores/auth.ts
+- [X] T075 [P] Create router configuration in /web/src/router/index.ts
+- [X] T076 [P] Create layout components in /web/src/components/Layout/
+- [X] T077 Create login page in /web/src/pages/Login.vue
+- [X] T078 [P] [US6] Create CruiseLine management page in /web/src/pages/admin/CruiseLines.vue
+- [X] T079 [P] [US6] Create Ship management page in /web/src/pages/admin/Ships.vue
+- [X] T080 [P] [US6] Create Sailing management page in /web/src/pages/admin/Sailings.vue
+- [X] T081 [P] [US6] Create CabinType management page in /web/src/pages/admin/CabinTypes.vue
+- [X] T082 [P] [US6] Create Supplier management page in /web/src/pages/admin/Suppliers.vue
+- [X] T083 [US6] Create admin dashboard page in /web/src/pages/admin/Dashboard.vue
 
 **Checkpoint**: Foundation ready - all base CRUD operations working, admin can manage catalog data
 
@@ -167,18 +167,18 @@
 
 **Independent Test**: 选择一个航次和房型，输入价格后提交，验证历史记录中新增一条
 
-- [ ] T084 [US2] Create QuoteService interface in /internal/service/quote_service.go
-- [ ] T085 [US2] Implement CreateQuote in QuoteService for manual entry
-- [ ] T086 [US2] Implement ListQuotes with supplier filtering in QuoteService
-- [ ] T087 [US2] Implement VoidQuote in QuoteService (mark as voided, not delete)
-- [ ] T088 [US2] Create QuoteHandler in /internal/transport/http/quote_handler.go
-- [ ] T089 [US2] Register quote routes in /internal/transport/http/routes.go
-- [ ] T090 [P] [US2] Create quote store (Pinia) in /web/src/stores/quote.ts
-- [ ] T091 [P] [US2] Create SailingSelector component in /web/src/components/SailingSelector.vue
-- [ ] T092 [P] [US2] Create CabinTypeSelector component in /web/src/components/CabinTypeSelector.vue
-- [ ] T093 [US2] Create ManualQuoteForm component in /web/src/components/ManualQuoteForm.vue
-- [ ] T094 [US2] Create QuoteEntryPage in /web/src/pages/vendor/QuoteEntry.vue
-- [ ] T095 [US2] Create QuoteHistoryPage in /web/src/pages/vendor/QuoteHistory.vue
+- [X] T084 [US2] Create QuoteService interface in /internal/service/quote_service.go
+- [X] T085 [US2] Implement CreateQuote in QuoteService for manual entry
+- [X] T086 [US2] Implement ListQuotes with supplier filtering in QuoteService
+- [X] T087 [US2] Implement VoidQuote in QuoteService (mark as voided, not delete)
+- [X] T088 [US2] Create QuoteHandler in /internal/transport/http/quote_handler.go
+- [X] T089 [US2] Register quote routes in /internal/transport/http/routes.go
+- [X] T090 [P] [US2] Create quote store (Pinia) in /web/src/stores/quote.ts
+- [X] T091 [P] [US2] Create SailingSelector component in /web/src/components/SailingSelector.vue
+- [X] T092 [P] [US2] Create CabinTypeSelector component in /web/src/components/CabinTypeSelector.vue
+- [X] T093 [US2] Create ManualQuoteForm component in /web/src/components/ManualQuoteForm.vue
+- [X] T094 [US2] Create QuoteEntryPage in /web/src/pages/vendor/QuoteEntry.vue
+- [X] T095 [US2] Create QuoteHistoryPage in /web/src/pages/vendor/QuoteHistory.vue
 
 **Checkpoint**: Vendors can manually enter and view their quotes
 
@@ -188,29 +188,29 @@
 
 **Independent Test**: 上传一个包含航次报价的 PDF 文件，验证系统能正确识别并入库
 
-- [ ] T096 [US1] Create file storage service in /internal/service/file_storage.go
-- [ ] T097 [US1] Create PDF text extractor in /internal/parsers/pdf_extractor.go
-- [ ] T098 [P] [US1] Create Word text extractor in /internal/parsers/word_extractor.go
-- [ ] T099 [US1] Create Ollama client in /internal/llm/ollama_client.go
-- [ ] T100 [US1] Create prompt templates for quote parsing in /internal/llm/prompts/quote_parse.go
-- [ ] T101 [US1] Create LLM response parser in /internal/llm/response_parser.go
-- [ ] T102 [US1] Create base data matcher (aliases, similarity) in /internal/parsers/matcher.go
-- [ ] T103 [US1] Create ImportService in /internal/service/import_service.go
-- [ ] T104 [US1] Create ParseService for LLM parsing in /internal/service/parse_service.go
-- [ ] T105 [US1] Create async job queue in /internal/jobs/queue.go
-- [ ] T106 [US1] Create ExtractTextJob in /internal/jobs/extract_text_job.go
-- [ ] T107 [US1] Create LLMParseJob in /internal/jobs/llm_parse_job.go
-- [ ] T108 [US1] Create UserConfirmJob in /internal/jobs/user_confirm_job.go
-- [ ] T109 [US1] Create job worker runner in /cmd/worker/main.go
-- [ ] T110 [US1] Create ImportHandler in /internal/transport/http/import_handler.go
-- [ ] T111 [US1] Register import routes in /internal/transport/http/routes.go
-- [ ] T112 [P] [US1] Create import store (Pinia) in /web/src/stores/import.ts
-- [ ] T113 [US1] Create FileUploader component in /web/src/components/FileUploader.vue
-- [ ] T114 [US1] Create ParseResultViewer component in /web/src/components/ParseResultViewer.vue
-- [ ] T115 [US1] Create ParseResultEditor component in /web/src/components/ParseResultEditor.vue
-- [ ] T116 [US1] Create FileImportPage in /web/src/pages/vendor/FileImport.vue
-- [ ] T117 [US1] Create ImportConfirmPage in /web/src/pages/vendor/ImportConfirm.vue
-- [ ] T118 [US1] Create ImportHistoryPage in /web/src/pages/vendor/ImportHistory.vue
+- [X] T096 [US1] Create file storage service in /internal/service/file_storage.go
+- [X] T097 [US1] Create PDF text extractor in /internal/parsers/pdf_extractor.go
+- [X] T098 [P] [US1] Create Word text extractor in /internal/parsers/word_extractor.go
+- [X] T099 [US1] Create Ollama client in /internal/llm/ollama_client.go
+- [X] T100 [US1] Create prompt templates for quote parsing in /internal/llm/prompts/quote_parse.go
+- [X] T101 [US1] Create LLM response parser in /internal/llm/response_parser.go
+- [X] T102 [US1] Create base data matcher (aliases, similarity) in /internal/parsers/matcher.go
+- [X] T103 [US1] Create ImportService in /internal/service/import_service.go
+- [X] T104 [US1] Create ParseService for LLM parsing in /internal/service/parse_service.go
+- [X] T105 [US1] Create async job queue in /internal/jobs/queue.go
+- [X] T106 [US1] Create ExtractTextJob in /internal/jobs/extract_text_job.go
+- [X] T107 [US1] Create LLMParseJob in /internal/jobs/llm_parse_job.go
+- [X] T108 [US1] Create UserConfirmJob in /internal/jobs/user_confirm_job.go
+- [X] T109 [US1] Create job worker runner in /cmd/worker/main.go
+- [X] T110 [US1] Create ImportHandler in /internal/transport/http/import_handler.go
+- [X] T111 [US1] Register import routes in /internal/transport/http/routes.go
+- [X] T112 [P] [US1] Create import store (Pinia) in /web/src/stores/import.ts
+- [X] T113 [US1] Create FileUploader component in /web/src/components/FileUploader.vue
+- [X] T114 [US1] Create ParseResultViewer component in /web/src/components/ParseResultViewer.vue
+- [X] T115 [US1] Create ParseResultEditor component in /web/src/components/ParseResultEditor.vue
+- [X] T116 [US1] Create FileImportPage in /web/src/pages/vendor/FileImport.vue
+- [X] T117 [US1] Create ImportConfirmPage in /web/src/pages/vendor/ImportConfirm.vue
+- [X] T118 [US1] Create ImportHistoryPage in /web/src/pages/vendor/ImportHistory.vue
 
 **Checkpoint**: Vendors can upload files, view LLM recognition results, and confirm to create quotes
 
