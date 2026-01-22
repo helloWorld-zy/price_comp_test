@@ -24,21 +24,21 @@
 
 ---
 
-## Phase 1: Setup (项目初始化)
+## Phase 1: Setup (项目初始化) ✅ COMPLETE
 
 **Purpose**: Project initialization, tooling, and basic structure
 
-- [ ] T001 Create Go module and initialize project in go.mod
-- [ ] T002 [P] Create backend directory structure per plan.md (/cmd, /internal, /api, /migrations)
-- [ ] T003 [P] Initialize Vue 3 + TypeScript frontend project in /web using Vite
-- [ ] T004 [P] Configure golangci-lint in .golangci.yml
-- [ ] T005 [P] Configure ESLint + Prettier for frontend in /web/.eslintrc.js
-- [ ] T006 Copy Protobuf contract files from specs to /api/proto/
-- [ ] T007 Create Makefile with proto-gen, build, test, lint targets
-- [ ] T008 [P] Create Docker Compose for development (MariaDB, Ollama) in docker-compose.yml
-- [ ] T009 [P] Create .env.example with all configuration variables
-- [ ] T010 Generate Go code from proto files to /api/gen/go/
-- [ ] T011 Generate TypeScript types from proto files to /api/gen/ts/
+- [X] T001 Create Go module and initialize project in go.mod
+- [X] T002 [P] Create backend directory structure per plan.md (/cmd, /internal, /api, /migrations)
+- [X] T003 [P] Initialize Vue 3 + TypeScript frontend project in /web using Vite
+- [X] T004 [P] Configure golangci-lint in .golangci.yml
+- [X] T005 [P] Configure ESLint + Prettier for frontend in /web/eslint.config.js
+- [X] T006 Copy Protobuf contract files from specs to /api/proto/
+- [X] T007 Create Makefile with proto-gen, build, test, lint targets
+- [X] T008 [P] Create Docker Compose for development (MariaDB, Ollama) in docker-compose.yml
+- [X] T009 [P] Create .env.example with all configuration variables
+- [X] T010 Generate Go code from proto files to /api/gen/go/
+- [X] T011 Generate TypeScript types from proto files to /api/gen/ts/
 
 **Checkpoint**: Project structure ready, proto code generated, development environment configured
 

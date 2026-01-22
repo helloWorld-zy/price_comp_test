@@ -1,0 +1,162 @@
+syntax = "proto3";
+
+package cruise.common.v1;
+
+option go_package = "cruise/api/gen/go/common/v1;commonv1";
+
+// ============================================================================
+// Common Types
+// ============================================================================
+
+// 统一 API 响应封装
+message ApiResponse {
+  int32 code = 1;                    // 业务错误码
+  string message = 2;                // 可读错误信息
+  repeated FieldError field_errors = 3; // 字段级错误
+  string trace_id = 4;               // 追踪 ID
+  oneof payload {
+    bytes data = 10;                 // 具体业务数据（protobuf 编码）
+  }
+}
+
+// 字段级错误
+message FieldError {
+  string field = 1;                  // 字段名
+  string message = 2;                // 错误信息
+  string code = 3;                   // 错误码
+}
+
+// 分页请求
+message PageRequest {
+  int32 page = 1;                    // 页码（从 1 开始）
+  int32 page_size = 2;               // 每页数量
+  string sort_by = 3;                // 排序字段
+  bool sort_desc = 4;                // 是否降序
+}
+
+// 分页响应元数据
+message PageMeta {
+  int32 page = 1;
+  int32 page_size = 2;
+  int64 total = 3;
+  int32 total_pages = 4;
+}
+
+// 日期范围
+message DateRange {
+  string start_date = 1;             // YYYY-MM-DD
+  string end_date = 2;               // YYYY-MM-DD
+}
+
+// 时间戳范围
+message TimestampRange {
+  int64 start_time = 1;              // Unix timestamp (seconds)
+  int64 end_time = 2;                // Unix timestamp (seconds)
+}
+
+// ============================================================================
+// Enums
+// ============================================================================
+
+// 通用状态
+enum Status {
+  STATUS_UNSPECIFIED = 0;
+  STATUS_ACTIVE = 1;
+  STATUS_INACTIVE = 2;
+}
+
+// 计价口径
+enum PricingUnit {
+  PRICING_UNIT_UNSPECIFIED = 0;
+  PRICING_UNIT_PER_PERSON = 1;       // 每人
+  PRICING_UNIT_PER_CABIN = 2;        // 每间
+  PRICING_UNIT_TOTAL = 3;            // 总价
+}
+
+// 报价来源
+enum QuoteSource {
+  QUOTE_SOURCE_UNSPECIFIED = 0;
+  QUOTE_SOURCE_MANUAL = 1;           // 手动录入
+  QUOTE_SOURCE_FILE_IMPORT = 2;      // 文件导入
+  QUOTE_SOURCE_TEXT_IMPORT = 3;      // 文本导入
+  QUOTE_SOURCE_TEMPLATE_IMPORT = 4;  // 模板导入
+}
+
+// 报价状态
+enum QuoteStatus {
+  QUOTE_STATUS_UNSPECIFIED = 0;
+  QUOTE_STATUS_ACTIVE = 1;           // 有效
+  QUOTE_STATUS_VOIDED = 2;           // 作废
+  QUOTE_STATUS_CORRECTED = 3;        // 已更正
+}
+
+// 导入任务类型
+enum ImportJobType {
+  IMPORT_JOB_TYPE_UNSPECIFIED = 0;
+  IMPORT_JOB_TYPE_FILE_UPLOAD = 1;
+  IMPORT_JOB_TYPE_TEXT_INPUT = 2;
+  IMPORT_JOB_TYPE_TEMPLATE_IMPORT = 3;
+  IMPORT_JOB_TYPE_ADMIN_LLM_GENERATE = 4;
+}
+
+// 任务状态
+enum JobStatus {
+  JOB_STATUS_UNSPECIFIED = 0;
+  JOB_STATUS_PENDING = 1;
+  JOB_STATUS_RUNNING = 2;
+  JOB_STATUS_NEEDS_CONFIRMATION = 3;
+  JOB_STATUS_SUCCEEDED = 4;
+  JOB_STATUS_FAILED = 5;
+}
+
+// 用户角色
+enum UserRole {
+  USER_ROLE_UNSPECIFIED = 0;
+  USER_ROLE_ADMIN = 1;
+  USER_ROLE_VENDOR = 2;
+}
+
+// 供应商可见性
+enum SupplierVisibility {
+  SUPPLIER_VISIBILITY_UNSPECIFIED = 0;
+  SUPPLIER_VISIBILITY_PRIVATE = 1;
+  SUPPLIER_VISIBILITY_PUBLIC = 2;
+}
+
+// ============================================================================
+// Error Codes
+// ============================================================================
+
+enum ErrorCode {
+  ERROR_CODE_UNSPECIFIED = 0;
+  ERROR_CODE_OK = 1;
+  
+  // Auth errors (1000-1999)
+  ERROR_CODE_UNAUTHORIZED = 1001;
+  ERROR_CODE_FORBIDDEN = 1002;
+  ERROR_CODE_TOKEN_EXPIRED = 1003;
+  ERROR_CODE_INVALID_CREDENTIALS = 1004;
+  
+  // Validation errors (2000-2999)
+  ERROR_CODE_VALIDATION_FAILED = 2001;
+  ERROR_CODE_MISSING_REQUIRED_FIELD = 2002;
+  ERROR_CODE_INVALID_FORMAT = 2003;
+  
+  // Business errors (3000-3999)
+  ERROR_CODE_NOT_FOUND = 3001;
+  ERROR_CODE_ALREADY_EXISTS = 3002;
+  ERROR_CODE_CONFLICT = 3003;
+  ERROR_CODE_IDEMPOTENCY_CONFLICT = 3004;
+  
+  // Import/Parse errors (4000-4999)
+  ERROR_CODE_PARSE_FAILED = 4001;
+  ERROR_CODE_FILE_TOO_LARGE = 4002;
+  ERROR_CODE_UNSUPPORTED_FILE_TYPE = 4003;
+  ERROR_CODE_EXTRACTION_FAILED = 4004;
+  ERROR_CODE_LLM_TIMEOUT = 4005;
+  
+  // Mapping errors (5000-5999)
+  ERROR_CODE_SAILING_NOT_FOUND = 5001;
+  ERROR_CODE_CABIN_TYPE_NOT_FOUND = 5002;
+  ERROR_CODE_MAPPING_CONFLICT = 5003;
+}

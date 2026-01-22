@@ -1,0 +1,71 @@
+# Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+vendor/
+go.work
+go.work.sum
+
+# Build outputs
+/bin/
+/build/
+/dist/
+
+# Dependencies
+/node_modules/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Environment
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Logs
+*.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Coverage
+coverage.out
+coverage.html
+coverage/
+
+# Protobuf generated files (keep in git, but exclude temp)
+*.pb.tmp
+
+# Frontend build
+/web/dist/
+/web/node_modules/
+
+# Database
+*.db
+*.sqlite
+
+# Temp files
+*.tmp
+*.bak
+
+# Docker
+.docker/
+
+# Uploads (runtime data)
+/uploads/
+/storage/
+
+# API generated files are committed
+# /api/gen/go/
+# /api/gen/ts/

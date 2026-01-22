@@ -1,0 +1,448 @@
+syntax = "proto3";
+
+package cruise.import.v1;
+
+option go_package = "cruise/api/gen/go/import/v1;importv1";
+
+import "common.proto";
+
+// ============================================================================
+// Import Service
+// ============================================================================
+
+service ImportService {
+  // ==================== 文件上传 ====================
+  // 上传文件（PDF/Word/Excel）
+  rpc UploadFile(UploadFileRequest) returns (UploadFileResponse);
+  
+  // ==================== 文本输入 ====================
+  // 提交文本进行解析
+  rpc SubmitText(SubmitTextRequest) returns (SubmitTextResponse);
+  
+  // ==================== 任务管理 ====================
+  // 获取导入任务状态
+  rpc GetImportJob(GetImportJobRequest) returns (GetImportJobResponse);
+  
+  // 获取导入任务列表
+  rpc ListImportJobs(ListImportJobsRequest) returns (ListImportJobsResponse);
+  
+  // 重试失败任务
+  rpc RetryImportJob(RetryImportJobRequest) returns (RetryImportJobResponse);
+  
+  // ==================== 解析结果 ====================
+  // 获取解析结果（待确认）
+  rpc GetParseResult(GetParseResultRequest) returns (GetParseResultResponse);
+  
+  // 确认解析结果
+  rpc ConfirmParseResult(ConfirmParseResultRequest) returns (ConfirmParseResultResponse);
+  
+  // 拒绝/取消解析结果
+  rpc RejectParseResult(RejectParseResultRequest) returns (RejectParseResultResponse);
+  
+  // ==================== 模板 ====================
+  // 下载导入模板
+  rpc DownloadTemplate(DownloadTemplateRequest) returns (DownloadTemplateResponse);
+  
+  // 上传模板导入
+  rpc UploadTemplate(UploadTemplateRequest) returns (UploadTemplateResponse);
+  
+  // ==================== 管理员 LLM 生成 ====================
+  // 从文本生成基础数据候选
+  rpc GenerateCatalogFromText(GenerateCatalogFromTextRequest) returns (GenerateCatalogFromTextResponse);
+  
+  // 确认生成的基础数据
+  rpc ConfirmGeneratedCatalog(ConfirmGeneratedCatalogRequest) returns (ConfirmGeneratedCatalogResponse);
+}
+
+// ============================================================================
+// Upload File
+// ============================================================================
+
+message UploadFileRequest {
+  bytes file_content = 1;
+  string file_name = 2;
+  string content_type = 3;
+  optional string idempotency_key = 4;
+}
+
+message UploadFileResponse {
+  ImportJob job = 1;
+}
+
+// ============================================================================
+// Submit Text
+// ============================================================================
+
+message SubmitTextRequest {
+  string text = 1;
+  optional string idempotency_key = 2;
+}
+
+message SubmitTextResponse {
+  ImportJob job = 1;
+}
+
+// ============================================================================
+// Import Job
+// ============================================================================
+
+message ImportJob {
+  uint64 id = 1;
+  cruise.common.v1.ImportJobType type = 2;
+  cruise.common.v1.JobStatus status = 3;
+  
+  // File info (if file upload)
+  optional string file_name = 4;
+  optional string file_hash = 5;
+  optional int64 file_size = 6;
+  
+  // Idempotency
+  optional string idempotency_key = 7;
+  
+  // Processing info
+  optional string model_version = 8;
+  optional string prompt_version = 9;
+  optional string error_message = 10;
+  
+  // Timing
+  optional int64 started_at = 11;
+  optional int64 completed_at = 12;
+  optional int64 duration_ms = 13;
+  
+  // Timestamps
+  int64 created_at = 14;
+  uint64 created_by = 15;
+}
+
+message GetImportJobRequest {
+  uint64 id = 1;
+}
+
+message GetImportJobResponse {
+  ImportJob job = 1;
+}
+
+message ListImportJobsRequest {
+  cruise.common.v1.PageRequest page = 1;
+  optional cruise.common.v1.ImportJobType type_filter = 2;
+  optional cruise.common.v1.JobStatus status_filter = 3;
+  optional cruise.common.v1.TimestampRange created_at_filter = 4;
+}
+
+message ListImportJobsResponse {
+  repeated ImportJob jobs = 1;
+  cruise.common.v1.PageMeta page_meta = 2;
+}
+
+message RetryImportJobRequest {
+  uint64 id = 1;
+}
+
+message RetryImportJobResponse {
+  ImportJob job = 1;
+}
+
+// ============================================================================
+// Parse Result
+// ============================================================================
+
+message GetParseResultRequest {
+  uint64 import_job_id = 1;
+}
+
+message GetParseResultResponse {
+  ImportJob job = 1;
+  ParseResult result = 2;
+}
+
+message ParseResult {
+  repeated ParsedQuote quotes = 1;
+  float overall_confidence = 2;
+  repeated ParseWarning warnings = 3;
+  repeated PageInfo pages = 4;       // PDF page info
+}
+
+message ParsedQuote {
+  int32 index = 1;
+  
+  // Sailing match
+  optional uint64 sailing_id = 2;
+  optional string sailing_suggestion = 3;
+  SailingCandidate sailing_candidate = 4;
+  
+  // Cabin type match
+  optional uint64 cabin_type_id = 5;
+  optional string cabin_type_suggestion = 6;
+  CabinTypeCandidate cabin_type_candidate = 7;
+  
+  // Price info
+  string price = 8;
+  string currency = 9;
+  cruise.common.v1.PricingUnit pricing_unit = 10;
+  optional string conditions = 11;
+  optional int32 guest_count = 12;
+  optional string promotion = 13;
+  optional int32 cabin_quantity = 14;
+  optional string valid_until = 15;
+  
+  // Confidence
+  float confidence = 16;
+  repeated string warnings = 17;
+  
+  // Source reference
+  optional string source_text = 18;
+  optional int32 page_number = 19;
+}
+
+message SailingCandidate {
+  optional string cruise_line_name = 1;
+  optional string ship_name = 2;
+  optional string departure_date = 3;
+  optional string return_date = 4;
+  optional string route = 5;
+  optional string sailing_code = 6;
+}
+
+message CabinTypeCandidate {
+  optional string category_name = 1;
+  optional string type_name = 2;
+}
+
+message ParseWarning {
+  string code = 1;
+  string message = 2;
+  optional int32 page_number = 3;
+  optional string field = 4;
+}
+
+message PageInfo {
+  int32 page_number = 1;
+  bool extracted_successfully = 2;
+  optional string error_message = 3;
+  optional int32 text_length = 4;
+}
+
+// ============================================================================
+// Confirm Parse Result
+// ============================================================================
+
+message ConfirmParseResultRequest {
+  uint64 import_job_id = 1;
+  repeated ConfirmedQuote quotes = 2;
+}
+
+message ConfirmedQuote {
+  int32 original_index = 1;
+  
+  // Confirmed mappings (required)
+  uint64 sailing_id = 2;
+  uint64 cabin_type_id = 3;
+  
+  // Confirmed/corrected values
+  string price = 4;
+  string currency = 5;
+  cruise.common.v1.PricingUnit pricing_unit = 6;
+  optional string conditions = 7;
+  optional int32 guest_count = 8;
+  optional string promotion = 9;
+  optional int32 cabin_quantity = 10;
+  optional string valid_until = 11;
+  optional string notes = 12;
+  
+  // If sailing/cabin not found, can request creation
+  optional CreateSailingRequest create_sailing = 20;
+  optional CreateCabinTypeRequest create_cabin_type = 21;
+}
+
+message CreateSailingRequest {
+  uint64 ship_id = 1;
+  optional string sailing_code = 2;
+  string departure_date = 3;
+  string return_date = 4;
+  string route = 5;
+}
+
+message CreateCabinTypeRequest {
+  uint64 ship_id = 1;
+  uint64 category_id = 2;
+  string name = 3;
+}
+
+message ConfirmParseResultResponse {
+  int32 quotes_created = 1;
+  int32 sailings_created = 2;
+  int32 cabin_types_created = 3;
+  repeated BatchError errors = 4;
+}
+
+message BatchError {
+  int32 index = 1;
+  string code = 2;
+  string message = 3;
+}
+
+message RejectParseResultRequest {
+  uint64 import_job_id = 1;
+  optional string reason = 2;
+}
+
+message RejectParseResultResponse {
+  bool success = 1;
+}
+
+// ============================================================================
+// Template
+// ============================================================================
+
+enum TemplateType {
+  TEMPLATE_TYPE_UNSPECIFIED = 0;
+  TEMPLATE_TYPE_SAILING_CABIN = 1;   // 航次/房型导入模板（管理员）
+  TEMPLATE_TYPE_QUOTE = 2;           // 报价导入模板（供应商）
+}
+
+message DownloadTemplateRequest {
+  TemplateType type = 1;
+}
+
+message DownloadTemplateResponse {
+  bytes file_content = 1;
+  string file_name = 2;
+  string content_type = 3;
+}
+
+message UploadTemplateRequest {
+  TemplateType type = 1;
+  bytes file_content = 2;
+  string file_name = 3;
+  optional string idempotency_key = 4;
+}
+
+message UploadTemplateResponse {
+  ImportJob job = 1;
+  TemplateParseResult result = 2;
+}
+
+message TemplateParseResult {
+  int32 total_rows = 1;
+  int32 valid_rows = 2;
+  int32 error_rows = 3;
+  repeated TemplateRowError errors = 4;
+}
+
+message TemplateRowError {
+  int32 row_number = 1;
+  string column = 2;
+  string message = 3;
+}
+
+// ============================================================================
+// Admin LLM Generate
+// ============================================================================
+
+message GenerateCatalogFromTextRequest {
+  string text = 1;
+  optional string idempotency_key = 2;
+}
+
+message GenerateCatalogFromTextResponse {
+  ImportJob job = 1;
+  CatalogGenerationResult result = 2;
+}
+
+message CatalogGenerationResult {
+  repeated GeneratedCruiseLine cruise_lines = 1;
+  repeated GeneratedShip ships = 2;
+  repeated GeneratedSailing sailings = 3;
+  repeated GeneratedCabinType cabin_types = 4;
+  float overall_confidence = 5;
+  repeated ParseWarning warnings = 6;
+}
+
+message GeneratedCruiseLine {
+  int32 index = 1;
+  string name = 2;
+  optional string name_en = 3;
+  optional uint64 existing_id = 4;   // if matches existing
+  float confidence = 5;
+}
+
+message GeneratedShip {
+  int32 index = 1;
+  int32 cruise_line_index = 2;       // reference to GeneratedCruiseLine
+  optional uint64 cruise_line_id = 3;
+  string name = 4;
+  optional uint64 existing_id = 5;
+  float confidence = 6;
+}
+
+message GeneratedSailing {
+  int32 index = 1;
+  int32 ship_index = 2;
+  optional uint64 ship_id = 3;
+  string departure_date = 4;
+  string return_date = 5;
+  string route = 6;
+  optional string sailing_code = 7;
+  optional uint64 existing_id = 8;
+  float confidence = 9;
+}
+
+message GeneratedCabinType {
+  int32 index = 1;
+  int32 ship_index = 2;
+  optional uint64 ship_id = 3;
+  string category_name = 4;
+  string type_name = 5;
+  optional uint64 existing_id = 6;
+  float confidence = 7;
+}
+
+message ConfirmGeneratedCatalogRequest {
+  uint64 import_job_id = 1;
+  repeated ConfirmedCruiseLine cruise_lines = 2;
+  repeated ConfirmedShip ships = 3;
+  repeated ConfirmedSailing sailings = 4;
+  repeated ConfirmedCabinType cabin_types = 5;
+}
+
+message ConfirmedCruiseLine {
+  int32 original_index = 1;
+  bool skip = 2;                     // true to skip creation
+  optional uint64 merge_with_id = 3; // merge with existing
+  optional string name = 4;          // corrected name
+}
+
+message ConfirmedShip {
+  int32 original_index = 1;
+  bool skip = 2;
+  optional uint64 merge_with_id = 3;
+  optional uint64 cruise_line_id = 4;
+  optional string name = 5;
+}
+
+message ConfirmedSailing {
+  int32 original_index = 1;
+  bool skip = 2;
+  optional uint64 merge_with_id = 3;
+  optional uint64 ship_id = 4;
+  optional string departure_date = 5;
+  optional string return_date = 6;
+  optional string route = 7;
+}
+
+message ConfirmedCabinType {
+  int32 original_index = 1;
+  bool skip = 2;
+  optional uint64 merge_with_id = 3;
+  optional uint64 ship_id = 4;
+  optional uint64 category_id = 5;
+  optional string name = 6;
+}
+
+message ConfirmGeneratedCatalogResponse {
+  int32 cruise_lines_created = 1;
+  int32 ships_created = 2;
+  int32 sailings_created = 3;
+  int32 cabin_types_created = 4;
+  repeated BatchError errors = 5;
+}

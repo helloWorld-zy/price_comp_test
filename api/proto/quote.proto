@@ -1,0 +1,295 @@
+syntax = "proto3";
+
+package cruise.quote.v1;
+
+option go_package = "cruise/api/gen/go/quote/v1;quotev1";
+
+import "common.proto";
+
+// ============================================================================
+// Quote Service
+// ============================================================================
+
+service QuoteService {
+  // ==================== 报价提交 ====================
+  // 手动录入单条报价
+  rpc CreateQuote(CreateQuoteRequest) returns (CreateQuoteResponse);
+  
+  // 批量提交报价（确认解析结果后）
+  rpc BatchCreateQuotes(BatchCreateQuotesRequest) returns (BatchCreateQuotesResponse);
+  
+  // 作废报价
+  rpc VoidQuote(VoidQuoteRequest) returns (VoidQuoteResponse);
+  
+  // ==================== 报价查询 ====================
+  // 获取报价历史列表
+  rpc ListQuotes(ListQuotesRequest) returns (ListQuotesResponse);
+  
+  // 获取单条报价详情
+  rpc GetQuote(GetQuoteRequest) returns (GetQuoteResponse);
+  
+  // ==================== 对比与趋势 ====================
+  // 获取航次价格对比表
+  rpc GetSailingComparison(GetSailingComparisonRequest) returns (GetSailingComparisonResponse);
+  
+  // 获取房型价格趋势
+  rpc GetPriceTrend(GetPriceTrendRequest) returns (GetPriceTrendResponse);
+  
+  // ==================== 导出 ====================
+  // 导出对比结果
+  rpc ExportComparison(ExportComparisonRequest) returns (ExportComparisonResponse);
+  
+  // 导出趋势数据
+  rpc ExportTrend(ExportTrendRequest) returns (ExportTrendResponse);
+}
+
+// ============================================================================
+// PriceQuote
+// ============================================================================
+
+message PriceQuote {
+  uint64 id = 1;
+  uint64 sailing_id = 2;
+  uint64 cabin_type_id = 3;
+  uint64 supplier_id = 4;
+  
+  // Denormalized for display
+  string sailing_code = 5;
+  string ship_name = 6;
+  string cruise_line_name = 7;
+  string departure_date = 8;
+  string cabin_type_name = 9;
+  string cabin_category_name = 10;
+  string supplier_name = 11;
+  
+  // Price info
+  string price = 12;                 // decimal as string for precision
+  string currency = 13;
+  cruise.common.v1.PricingUnit pricing_unit = 14;
+  optional string conditions = 15;
+  optional int32 guest_count = 16;
+  optional string promotion = 17;
+  optional int32 cabin_quantity = 18;
+  optional string valid_until = 19;
+  optional string notes = 20;
+  
+  // Source tracking
+  cruise.common.v1.QuoteSource source = 21;
+  optional string source_ref = 22;
+  optional uint64 import_job_id = 23;
+  
+  // Status
+  cruise.common.v1.QuoteStatus status = 24;
+  
+  // Timestamps
+  int64 created_at = 25;
+  uint64 created_by = 26;
+}
+
+// ============================================================================
+// Create Quote
+// ============================================================================
+
+message CreateQuoteRequest {
+  uint64 sailing_id = 1;
+  uint64 cabin_type_id = 2;
+  string price = 3;                  // decimal as string
+  string currency = 4;
+  cruise.common.v1.PricingUnit pricing_unit = 5;
+  optional string conditions = 6;
+  optional int32 guest_count = 7;
+  optional string promotion = 8;
+  optional int32 cabin_quantity = 9;
+  optional string valid_until = 10;
+  optional string notes = 11;
+  optional string idempotency_key = 12;
+}
+
+message CreateQuoteResponse {
+  PriceQuote quote = 1;
+}
+
+message BatchCreateQuotesRequest {
+  repeated CreateQuoteRequest quotes = 1;
+  optional uint64 import_job_id = 2;
+  optional string idempotency_key = 3;
+}
+
+message BatchCreateQuotesResponse {
+  repeated PriceQuote quotes = 1;
+  int32 success_count = 2;
+  int32 fail_count = 3;
+  repeated BatchCreateError errors = 4;
+}
+
+message BatchCreateError {
+  int32 index = 1;
+  string message = 2;
+  string code = 3;
+}
+
+// ============================================================================
+// Void Quote
+// ============================================================================
+
+message VoidQuoteRequest {
+  uint64 id = 1;
+  optional string reason = 2;
+}
+
+message VoidQuoteResponse {
+  PriceQuote quote = 1;
+}
+
+// ============================================================================
+// List Quotes
+// ============================================================================
+
+message ListQuotesRequest {
+  cruise.common.v1.PageRequest page = 1;
+  
+  // Filters
+  optional uint64 sailing_id_filter = 2;
+  optional uint64 cabin_type_id_filter = 3;
+  optional uint64 supplier_id_filter = 4;
+  optional uint64 cruise_line_id_filter = 5;
+  optional uint64 ship_id_filter = 6;
+  optional uint64 cabin_category_id_filter = 7;
+  optional cruise.common.v1.DateRange departure_date_filter = 8;
+  optional cruise.common.v1.TimestampRange created_at_filter = 9;
+  optional cruise.common.v1.QuoteStatus status_filter = 10;
+  
+  // 多选过滤
+  repeated uint64 supplier_ids_filter = 11;
+}
+
+message ListQuotesResponse {
+  repeated PriceQuote quotes = 1;
+  cruise.common.v1.PageMeta page_meta = 2;
+}
+
+message GetQuoteRequest {
+  uint64 id = 1;
+}
+
+message GetQuoteResponse {
+  PriceQuote quote = 1;
+}
+
+// ============================================================================
+// Sailing Comparison
+// ============================================================================
+
+message GetSailingComparisonRequest {
+  uint64 sailing_id = 1;
+  repeated uint64 supplier_ids = 2;  // 可选，不传则返回所有可见供应商
+  optional uint64 cabin_category_id = 3;
+}
+
+message GetSailingComparisonResponse {
+  SailingInfo sailing = 1;
+  repeated SupplierColumn suppliers = 2;
+  repeated CabinTypeRow cabin_types = 3;
+}
+
+message SailingInfo {
+  uint64 id = 1;
+  string sailing_code = 2;
+  string ship_name = 3;
+  string cruise_line_name = 4;
+  string departure_date = 5;
+  string return_date = 6;
+  int32 nights = 7;
+  string route = 8;
+}
+
+message SupplierColumn {
+  uint64 id = 1;
+  string name = 2;
+}
+
+message CabinTypeRow {
+  uint64 cabin_type_id = 1;
+  string cabin_type_name = 2;
+  uint64 cabin_category_id = 3;
+  string cabin_category_name = 4;
+  repeated CabinPriceCell prices = 5;
+}
+
+message CabinPriceCell {
+  uint64 supplier_id = 1;
+  optional string latest_price = 2;  // null if no quote
+  optional string currency = 3;
+  optional cruise.common.v1.PricingUnit pricing_unit = 4;
+  optional int64 updated_at = 5;
+  optional string price_change = 6;  // vs previous quote, e.g., "+100", "-50"
+  optional int32 quote_count = 7;    // total quotes for trend indicator
+}
+
+// ============================================================================
+// Price Trend
+// ============================================================================
+
+message GetPriceTrendRequest {
+  uint64 sailing_id = 1;
+  uint64 cabin_type_id = 2;
+  repeated uint64 supplier_ids = 3;
+  optional cruise.common.v1.DateRange date_range = 4;  // 查询时间范围
+}
+
+message GetPriceTrendResponse {
+  SailingInfo sailing = 1;
+  CabinTypeInfo cabin_type = 2;
+  repeated SupplierTrend trends = 3;
+}
+
+message CabinTypeInfo {
+  uint64 id = 1;
+  string name = 2;
+  string category_name = 3;
+}
+
+message SupplierTrend {
+  uint64 supplier_id = 1;
+  string supplier_name = 2;
+  repeated PricePoint points = 3;
+}
+
+message PricePoint {
+  int64 timestamp = 1;               // Unix timestamp
+  string price = 2;
+  string currency = 3;
+  cruise.common.v1.PricingUnit pricing_unit = 4;
+  optional string notes = 5;
+}
+
+// ============================================================================
+// Export
+// ============================================================================
+
+message ExportComparisonRequest {
+  uint64 sailing_id = 1;
+  repeated uint64 supplier_ids = 2;
+  optional uint64 cabin_category_id = 3;
+  string format = 4;                 // "excel" or "csv"
+}
+
+message ExportComparisonResponse {
+  bytes file_content = 1;
+  string file_name = 2;
+  string content_type = 3;
+}
+
+message ExportTrendRequest {
+  uint64 sailing_id = 1;
+  uint64 cabin_type_id = 2;
+  repeated uint64 supplier_ids = 3;
+  optional cruise.common.v1.DateRange date_range = 4;
+  string format = 5;                 // "csv"
+}
+
+message ExportTrendResponse {
+  bytes file_content = 1;
+  string file_name = 2;
+  string content_type = 3;
+}
