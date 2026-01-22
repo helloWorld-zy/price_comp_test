@@ -1,7 +1,7 @@
 0. 技术决策摘要（可回滚）
-Web 框架：Gin（路由、中间件、上传、鉴权链路清晰）46
+Web 框架：Gin（路由、中间件、上传、鉴权链路清晰）
 接口契约：Protobuf 为唯一 DTO/契约来源（后端与前端代码均从 .proto 生成）
-OpenAPI：从 .proto 生成文档（用于联调与验收），使用 grpc-gateway 的生成链路1112
+OpenAPI：从 .proto 生成文档（用于联调与验收），使用 grpc-gateway 的生成链路
 后台任务：导入/解析走异步 Job（可重试、可幂等、可审计）
 1. 仓库结构（建议）
 bash
@@ -45,9 +45,9 @@ ApiResponse { code, message, field_errors[], trace_id, payload(oneof) }
 业务错误码枚举化：鉴权失败/权限不足/找不到航次/房型映射冲突/幂等冲突/解析失败等
 2.4 OpenAPI（从 proto 生成）
 目标：让“验收/联调”有稳定文档与示例
-方案：使用 grpc-gateway 的 OpenAPI 生成能力（protoc-gen-openapiv2 等）并通过 proto 注解定制输出1112
-约束：同一路径+方法冲突要在 proto 设计阶段规避（生成器会受限）1112
-备注：你也可以用“gRPC 服务 + grpc-gateway 反向代理”方式提供 REST/JSON 给浏览器，但你当前诉求是前后端用 Protobuf；因此建议先按“Gin 直接收发 Protobuf”落地，OpenAPI 仍从 proto 生成用于文档与验收111210。
+方案：使用 grpc-gateway 的 OpenAPI 生成能力（protoc-gen-openapiv2 等）并通过 proto 注解定制输出
+约束：同一路径+方法冲突要在 proto 设计阶段规避（生成器会受限）
+备注：你也可以用“gRPC 服务 + grpc-gateway 反向代理”方式提供 REST/JSON 给浏览器，但你当前诉求是前后端用 Protobuf；因此建议先按“Gin 直接收发 Protobuf”落地，OpenAPI 仍从 proto 生成用于文档与验收。
 3. Gin 层设计（只做适配，不写业务）
 3.1 中间件链
 RequestID/TraceID：注入到日志与响应
