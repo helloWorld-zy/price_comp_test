@@ -1,0 +1,185 @@
+syntax = "proto3";
+
+package cruise.auth.v1;
+
+option go_package = "cruise/api/gen/go/auth/v1;authv1";
+
+import "common.proto";
+
+// ============================================================================
+// Auth Service
+// ============================================================================
+
+service AuthService {
+  // 用户登录
+  rpc Login(LoginRequest) returns (LoginResponse);
+  
+  // 刷新令牌
+  rpc RefreshToken(RefreshTokenRequest) returns (RefreshTokenResponse);
+  
+  // 获取当前用户信息
+  rpc GetCurrentUser(GetCurrentUserRequest) returns (GetCurrentUserResponse);
+  
+  // 修改密码
+  rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordResponse);
+  
+  // 登出
+  rpc Logout(LogoutRequest) returns (LogoutResponse);
+}
+
+// ============================================================================
+// Messages
+// ============================================================================
+
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  string access_token = 1;
+  string refresh_token = 2;
+  int64 expires_at = 3;              // Unix timestamp
+  User user = 4;
+}
+
+message RefreshTokenRequest {
+  string refresh_token = 1;
+}
+
+message RefreshTokenResponse {
+  string access_token = 1;
+  string refresh_token = 2;
+  int64 expires_at = 3;
+}
+
+message GetCurrentUserRequest {}
+
+message GetCurrentUserResponse {
+  User user = 1;
+}
+
+message ChangePasswordRequest {
+  string old_password = 1;
+  string new_password = 2;
+}
+
+message ChangePasswordResponse {
+  bool success = 1;
+}
+
+message LogoutRequest {}
+
+message LogoutResponse {
+  bool success = 1;
+}
+
+// ============================================================================
+// User
+// ============================================================================
+
+message User {
+  uint64 id = 1;
+  string username = 2;
+  cruise.common.v1.UserRole role = 3;
+  optional uint64 supplier_id = 4;   // 供应商用户绑定的供应商 ID
+  optional string supplier_name = 5; // 供应商名称
+  cruise.common.v1.Status status = 6;
+  int64 created_at = 7;
+  int64 updated_at = 8;
+}
+
+// 用户列表项（管理员用）
+message UserListItem {
+  uint64 id = 1;
+  string username = 2;
+  cruise.common.v1.UserRole role = 3;
+  optional uint64 supplier_id = 4;
+  optional string supplier_name = 5;
+  cruise.common.v1.Status status = 6;
+  int64 created_at = 7;
+}
+
+// ============================================================================
+// Admin User Management
+// ============================================================================
+
+service UserManagementService {
+  // 创建用户
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
+  
+  // 获取用户列表
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
+  
+  // 获取用户详情
+  rpc GetUser(GetUserRequest) returns (GetUserResponse);
+  
+  // 更新用户
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse);
+  
+  // 重置用户密码
+  rpc ResetUserPassword(ResetUserPasswordRequest) returns (ResetUserPasswordResponse);
+  
+  // 禁用/启用用户
+  rpc SetUserStatus(SetUserStatusRequest) returns (SetUserStatusResponse);
+}
+
+message CreateUserRequest {
+  string username = 1;
+  string password = 2;
+  cruise.common.v1.UserRole role = 3;
+  optional uint64 supplier_id = 4;   // VENDOR 角色必填
+}
+
+message CreateUserResponse {
+  User user = 1;
+}
+
+message ListUsersRequest {
+  cruise.common.v1.PageRequest page = 1;
+  optional cruise.common.v1.UserRole role_filter = 2;
+  optional uint64 supplier_id_filter = 3;
+  optional cruise.common.v1.Status status_filter = 4;
+}
+
+message ListUsersResponse {
+  repeated UserListItem users = 1;
+  cruise.common.v1.PageMeta page_meta = 2;
+}
+
+message GetUserRequest {
+  uint64 id = 1;
+}
+
+message GetUserResponse {
+  User user = 1;
+}
+
+message UpdateUserRequest {
+  uint64 id = 1;
+  optional string username = 2;
+  optional cruise.common.v1.UserRole role = 3;
+  optional uint64 supplier_id = 4;
+}
+
+message UpdateUserResponse {
+  User user = 1;
+}
+
+message ResetUserPasswordRequest {
+  uint64 id = 1;
+  string new_password = 2;
+}
+
+message ResetUserPasswordResponse {
+  bool success = 1;
+}
+
+message SetUserStatusRequest {
+  uint64 id = 1;
+  cruise.common.v1.Status status = 2;
+}
+
+message SetUserStatusResponse {
+  User user = 1;
+}

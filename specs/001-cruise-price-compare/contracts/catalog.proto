@@ -1,0 +1,467 @@
+syntax = "proto3";
+
+package cruise.catalog.v1;
+
+option go_package = "cruise/api/gen/go/catalog/v1;catalogv1";
+
+import "common.proto";
+
+// ============================================================================
+// Catalog Service (Admin)
+// ============================================================================
+
+service CatalogService {
+  // ==================== CruiseLine ====================
+  rpc CreateCruiseLine(CreateCruiseLineRequest) returns (CreateCruiseLineResponse);
+  rpc ListCruiseLines(ListCruiseLinesRequest) returns (ListCruiseLinesResponse);
+  rpc GetCruiseLine(GetCruiseLineRequest) returns (GetCruiseLineResponse);
+  rpc UpdateCruiseLine(UpdateCruiseLineRequest) returns (UpdateCruiseLineResponse);
+  rpc DeleteCruiseLine(DeleteCruiseLineRequest) returns (DeleteCruiseLineResponse);
+  
+  // ==================== Ship ====================
+  rpc CreateShip(CreateShipRequest) returns (CreateShipResponse);
+  rpc ListShips(ListShipsRequest) returns (ListShipsResponse);
+  rpc GetShip(GetShipRequest) returns (GetShipResponse);
+  rpc UpdateShip(UpdateShipRequest) returns (UpdateShipResponse);
+  rpc DeleteShip(DeleteShipRequest) returns (DeleteShipResponse);
+  
+  // ==================== Sailing ====================
+  rpc CreateSailing(CreateSailingRequest) returns (CreateSailingResponse);
+  rpc ListSailings(ListSailingsRequest) returns (ListSailingsResponse);
+  rpc GetSailing(GetSailingRequest) returns (GetSailingResponse);
+  rpc UpdateSailing(UpdateSailingRequest) returns (UpdateSailingResponse);
+  rpc DeleteSailing(DeleteSailingRequest) returns (DeleteSailingResponse);
+  
+  // ==================== CabinCategory ====================
+  rpc CreateCabinCategory(CreateCabinCategoryRequest) returns (CreateCabinCategoryResponse);
+  rpc ListCabinCategories(ListCabinCategoriesRequest) returns (ListCabinCategoriesResponse);
+  rpc UpdateCabinCategory(UpdateCabinCategoryRequest) returns (UpdateCabinCategoryResponse);
+  rpc DeleteCabinCategory(DeleteCabinCategoryRequest) returns (DeleteCabinCategoryResponse);
+  
+  // ==================== CabinType ====================
+  rpc CreateCabinType(CreateCabinTypeRequest) returns (CreateCabinTypeResponse);
+  rpc ListCabinTypes(ListCabinTypesRequest) returns (ListCabinTypesResponse);
+  rpc GetCabinType(GetCabinTypeRequest) returns (GetCabinTypeResponse);
+  rpc UpdateCabinType(UpdateCabinTypeRequest) returns (UpdateCabinTypeResponse);
+  rpc DeleteCabinType(DeleteCabinTypeRequest) returns (DeleteCabinTypeResponse);
+  
+  // ==================== Supplier ====================
+  rpc CreateSupplier(CreateSupplierRequest) returns (CreateSupplierResponse);
+  rpc ListSuppliers(ListSuppliersRequest) returns (ListSuppliersResponse);
+  rpc GetSupplier(GetSupplierRequest) returns (GetSupplierResponse);
+  rpc UpdateSupplier(UpdateSupplierRequest) returns (UpdateSupplierResponse);
+  rpc DeleteSupplier(DeleteSupplierRequest) returns (DeleteSupplierResponse);
+}
+
+// ============================================================================
+// CruiseLine
+// ============================================================================
+
+message CruiseLine {
+  uint64 id = 1;
+  string name = 2;
+  optional string name_en = 3;
+  repeated string aliases = 4;
+  cruise.common.v1.Status status = 5;
+  int64 created_at = 6;
+  int64 updated_at = 7;
+  uint64 created_by = 8;
+}
+
+message CreateCruiseLineRequest {
+  string name = 1;
+  optional string name_en = 2;
+  repeated string aliases = 3;
+}
+
+message CreateCruiseLineResponse {
+  CruiseLine cruise_line = 1;
+}
+
+message ListCruiseLinesRequest {
+  cruise.common.v1.PageRequest page = 1;
+  optional string name_filter = 2;
+  optional cruise.common.v1.Status status_filter = 3;
+}
+
+message ListCruiseLinesResponse {
+  repeated CruiseLine cruise_lines = 1;
+  cruise.common.v1.PageMeta page_meta = 2;
+}
+
+message GetCruiseLineRequest {
+  uint64 id = 1;
+}
+
+message GetCruiseLineResponse {
+  CruiseLine cruise_line = 1;
+}
+
+message UpdateCruiseLineRequest {
+  uint64 id = 1;
+  optional string name = 2;
+  optional string name_en = 3;
+  repeated string aliases = 4;
+  optional cruise.common.v1.Status status = 5;
+}
+
+message UpdateCruiseLineResponse {
+  CruiseLine cruise_line = 1;
+}
+
+message DeleteCruiseLineRequest {
+  uint64 id = 1;
+}
+
+message DeleteCruiseLineResponse {
+  bool success = 1;
+}
+
+// ============================================================================
+// Ship
+// ============================================================================
+
+message Ship {
+  uint64 id = 1;
+  uint64 cruise_line_id = 2;
+  string cruise_line_name = 3;       // denormalized for display
+  string name = 4;
+  repeated string aliases = 5;
+  cruise.common.v1.Status status = 6;
+  int64 created_at = 7;
+  int64 updated_at = 8;
+  uint64 created_by = 9;
+}
+
+message CreateShipRequest {
+  uint64 cruise_line_id = 1;
+  string name = 2;
+  repeated string aliases = 3;
+}
+
+message CreateShipResponse {
+  Ship ship = 1;
+}
+
+message ListShipsRequest {
+  cruise.common.v1.PageRequest page = 1;
+  optional uint64 cruise_line_id_filter = 2;
+  optional string name_filter = 3;
+  optional cruise.common.v1.Status status_filter = 4;
+}
+
+message ListShipsResponse {
+  repeated Ship ships = 1;
+  cruise.common.v1.PageMeta page_meta = 2;
+}
+
+message GetShipRequest {
+  uint64 id = 1;
+}
+
+message GetShipResponse {
+  Ship ship = 1;
+}
+
+message UpdateShipRequest {
+  uint64 id = 1;
+  optional uint64 cruise_line_id = 2;
+  optional string name = 3;
+  repeated string aliases = 4;
+  optional cruise.common.v1.Status status = 5;
+}
+
+message UpdateShipResponse {
+  Ship ship = 1;
+}
+
+message DeleteShipRequest {
+  uint64 id = 1;
+}
+
+message DeleteShipResponse {
+  bool success = 1;
+}
+
+// ============================================================================
+// Sailing
+// ============================================================================
+
+enum SailingStatus {
+  SAILING_STATUS_UNSPECIFIED = 0;
+  SAILING_STATUS_ACTIVE = 1;
+  SAILING_STATUS_CANCELLED = 2;
+}
+
+message Sailing {
+  uint64 id = 1;
+  uint64 ship_id = 2;
+  string ship_name = 3;              // denormalized
+  uint64 cruise_line_id = 4;         // denormalized
+  string cruise_line_name = 5;       // denormalized
+  optional string sailing_code = 6;
+  string departure_date = 7;         // YYYY-MM-DD
+  string return_date = 8;            // YYYY-MM-DD
+  int32 nights = 9;                  // computed
+  string route = 10;
+  repeated string ports = 11;
+  optional string description = 12;
+  SailingStatus status = 13;
+  int64 created_at = 14;
+  int64 updated_at = 15;
+  uint64 created_by = 16;
+}
+
+message CreateSailingRequest {
+  uint64 ship_id = 1;
+  optional string sailing_code = 2;
+  string departure_date = 3;
+  string return_date = 4;
+  string route = 5;
+  repeated string ports = 6;
+  optional string description = 7;
+}
+
+message CreateSailingResponse {
+  Sailing sailing = 1;
+}
+
+message ListSailingsRequest {
+  cruise.common.v1.PageRequest page = 1;
+  optional uint64 cruise_line_id_filter = 2;
+  optional uint64 ship_id_filter = 3;
+  optional cruise.common.v1.DateRange date_range_filter = 4;
+  optional string route_filter = 5;
+  optional SailingStatus status_filter = 6;
+}
+
+message ListSailingsResponse {
+  repeated Sailing sailings = 1;
+  cruise.common.v1.PageMeta page_meta = 2;
+}
+
+message GetSailingRequest {
+  uint64 id = 1;
+}
+
+message GetSailingResponse {
+  Sailing sailing = 1;
+}
+
+message UpdateSailingRequest {
+  uint64 id = 1;
+  optional uint64 ship_id = 2;
+  optional string sailing_code = 3;
+  optional string departure_date = 4;
+  optional string return_date = 5;
+  optional string route = 6;
+  repeated string ports = 7;
+  optional string description = 8;
+  optional SailingStatus status = 9;
+}
+
+message UpdateSailingResponse {
+  Sailing sailing = 1;
+}
+
+message DeleteSailingRequest {
+  uint64 id = 1;
+}
+
+message DeleteSailingResponse {
+  bool success = 1;
+}
+
+// ============================================================================
+// CabinCategory
+// ============================================================================
+
+message CabinCategory {
+  uint64 id = 1;
+  string name = 2;
+  optional string name_en = 3;
+  int32 sort_order = 4;
+  bool is_default = 5;
+  int64 created_at = 6;
+}
+
+message CreateCabinCategoryRequest {
+  string name = 1;
+  optional string name_en = 2;
+  optional int32 sort_order = 3;
+  optional bool is_default = 4;
+}
+
+message CreateCabinCategoryResponse {
+  CabinCategory cabin_category = 1;
+}
+
+message ListCabinCategoriesRequest {
+  cruise.common.v1.PageRequest page = 1;
+}
+
+message ListCabinCategoriesResponse {
+  repeated CabinCategory cabin_categories = 1;
+  cruise.common.v1.PageMeta page_meta = 2;
+}
+
+message UpdateCabinCategoryRequest {
+  uint64 id = 1;
+  optional string name = 2;
+  optional string name_en = 3;
+  optional int32 sort_order = 4;
+  optional bool is_default = 5;
+}
+
+message UpdateCabinCategoryResponse {
+  CabinCategory cabin_category = 1;
+}
+
+message DeleteCabinCategoryRequest {
+  uint64 id = 1;
+}
+
+message DeleteCabinCategoryResponse {
+  bool success = 1;
+}
+
+// ============================================================================
+// CabinType
+// ============================================================================
+
+message CabinType {
+  uint64 id = 1;
+  uint64 ship_id = 2;
+  string ship_name = 3;              // denormalized
+  uint64 category_id = 4;
+  string category_name = 5;          // denormalized
+  string name = 6;
+  optional string code = 7;
+  optional string description = 8;
+  int32 sort_order = 9;
+  bool is_enabled = 10;
+  int64 created_at = 11;
+  int64 updated_at = 12;
+}
+
+message CreateCabinTypeRequest {
+  uint64 ship_id = 1;
+  uint64 category_id = 2;
+  string name = 3;
+  optional string code = 4;
+  optional string description = 5;
+  optional int32 sort_order = 6;
+}
+
+message CreateCabinTypeResponse {
+  CabinType cabin_type = 1;
+}
+
+message ListCabinTypesRequest {
+  cruise.common.v1.PageRequest page = 1;
+  optional uint64 ship_id_filter = 2;
+  optional uint64 category_id_filter = 3;
+  optional bool is_enabled_filter = 4;
+}
+
+message ListCabinTypesResponse {
+  repeated CabinType cabin_types = 1;
+  cruise.common.v1.PageMeta page_meta = 2;
+}
+
+message GetCabinTypeRequest {
+  uint64 id = 1;
+}
+
+message GetCabinTypeResponse {
+  CabinType cabin_type = 1;
+}
+
+message UpdateCabinTypeRequest {
+  uint64 id = 1;
+  optional uint64 category_id = 2;
+  optional string name = 3;
+  optional string code = 4;
+  optional string description = 5;
+  optional int32 sort_order = 6;
+  optional bool is_enabled = 7;
+}
+
+message UpdateCabinTypeResponse {
+  CabinType cabin_type = 1;
+}
+
+message DeleteCabinTypeRequest {
+  uint64 id = 1;
+}
+
+message DeleteCabinTypeResponse {
+  bool success = 1;
+}
+
+// ============================================================================
+// Supplier
+// ============================================================================
+
+message Supplier {
+  uint64 id = 1;
+  string name = 2;
+  repeated string aliases = 3;
+  optional string contact_info = 4;
+  cruise.common.v1.SupplierVisibility visibility = 5;
+  cruise.common.v1.Status status = 6;
+  int64 created_at = 7;
+  int64 updated_at = 8;
+  uint64 created_by = 9;
+}
+
+message CreateSupplierRequest {
+  string name = 1;
+  repeated string aliases = 2;
+  optional string contact_info = 3;
+  optional cruise.common.v1.SupplierVisibility visibility = 4;
+}
+
+message CreateSupplierResponse {
+  Supplier supplier = 1;
+}
+
+message ListSuppliersRequest {
+  cruise.common.v1.PageRequest page = 1;
+  optional string name_filter = 2;
+  optional cruise.common.v1.Status status_filter = 3;
+}
+
+message ListSuppliersResponse {
+  repeated Supplier suppliers = 1;
+  cruise.common.v1.PageMeta page_meta = 2;
+}
+
+message GetSupplierRequest {
+  uint64 id = 1;
+}
+
+message GetSupplierResponse {
+  Supplier supplier = 1;
+}
+
+message UpdateSupplierRequest {
+  uint64 id = 1;
+  optional string name = 2;
+  repeated string aliases = 3;
+  optional string contact_info = 4;
+  optional cruise.common.v1.SupplierVisibility visibility = 5;
+  optional cruise.common.v1.Status status = 6;
+}
+
+message UpdateSupplierResponse {
+  Supplier supplier = 1;
+}
+
+message DeleteSupplierRequest {
+  uint64 id = 1;
+}
+
+message DeleteSupplierResponse {
+  bool success = 1;
+}
